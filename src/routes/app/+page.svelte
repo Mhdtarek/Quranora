@@ -26,6 +26,7 @@
   
 </script>
 <div style="margin-top: 20px;">
+  <h1 style="text-align: center; margin-bottom: 20px;">Quran Reader</h1>
   <Card shadow='sm' padding='lg'>
     <Card.Section first padding='lg'>
       <h2 style="text-align: center;">Daily Read</h2>
