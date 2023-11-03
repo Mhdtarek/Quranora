@@ -91,7 +91,7 @@ export async function startReading(
   userId,
   chapter,
   verse,
-  dailyVerseLimit = 10
+  dailyVerseLimit = localStorage.getItem("dailyVerseLimit") || 10
 ) {
   try {
     if (isDailyVerseLimitReached()) {
@@ -147,7 +147,7 @@ export async function startReading(
 export async function readNextVerse(
   userId,
   currentVerse,
-  dailyVerseLimit = 10
+  dailyVerseLimit = localStorage.getItem("dailyVerseLimit") || 10
 ) {
   try {
     const today = new Date();

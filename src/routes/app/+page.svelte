@@ -7,6 +7,8 @@
   const day = today.toISOString().split("T")[0]; // Extract the date in "YYYY-MM-DD" format
   let versesReadToday = 0; // Default value
   let versesToRead = 10
+  let dailyVerseLimit = localStorage.getItem("dailyVerseLimit") || 10
+
 
   if (localStorage.getItem(day) !== null) {
     versesReadToday = parseInt(localStorage.getItem(day));
@@ -17,7 +19,7 @@
     versesToRead = "Max amount read";
     showButton = false;
   } else {
-    versesToRead = 10 - versesReadToday // Call the function to get the verses read today
+    versesToRead = dailyVerseLimit - versesReadToday // Call the function to get the verses read today
     if (versesToRead <= 0) {
       showButton = false;
       versesToRead = "Max amount read";

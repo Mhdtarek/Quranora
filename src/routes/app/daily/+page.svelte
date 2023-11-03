@@ -8,7 +8,7 @@
   let userId = 'user123'; // Replace with the actual user ID
   let chapter = 1;
   let verse = 1;
-  let dailyVerseLimit = 10;
+  let dailyVerseLimit = localStorage.getItem("dailyVerseLimit") || 10
 
   let currentVerse = "1:1"
   let verseText;
@@ -58,12 +58,12 @@
           {currentVerse}
         </Badge>
       </Group>
-      <div class="Card">
+      <div class="Card" dir="rtl">
         <Card>
           <p class="text">{verseText}</p>
         </Card>
       </div>
-      <div class="Card">
+      <div class="Card" dir="auto">
         <Card >
           <p class="translationText">{translationText}</p>
         </Card>
