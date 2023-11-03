@@ -59,7 +59,7 @@ export async function fetchTranslation(verseKey, translationID) {
   }
 }
 
-export async function fetchVerseText(verseKey, translationID = 136) {
+export async function fetchVerseText(verseKey, translationID = 131) {
   try {
     const [surah, verse] = verseKey.split(":");
     const translationText = await fetchTranslation(verseKey, translationID);
@@ -105,7 +105,7 @@ export async function startReading(
     let currentVerse = localStorage.getItem("currentVerse") || "1:1";
 
     const selectedTranslationID =
-      localStorage.getItem("selectedTranslationID") || 136;
+      localStorage.getItem("selectedTranslation") || 131;
 
     let verseTextData = await fetchVerseText(
       currentVerse,
@@ -167,7 +167,7 @@ export async function readNextVerse(
     }
 
     const selectedTranslationID =
-      localStorage.getItem("selectedTranslationID") || 136;
+      localStorage.getItem("selectedTranslation") || 131;
 
     console.log("Verses read today", versesReadToday);
 
