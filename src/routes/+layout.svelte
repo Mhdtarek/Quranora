@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-  <link rel=”manifest” href=”site.webmanifest> 
+  <link rel="manifest" href="site.webmanifest"> 
 </svelte:head>
 
 <SvelteUIProvider withNormalizeCSS withGlobalStyles themeObserver="dark">
