@@ -10,8 +10,7 @@
   // Initialize selectedTranslation from local storage or as null
   let selectedTranslation = localStorage.getItem('selectedTranslation') || null;
 
-  // Initialize dailyVerseLimit from local storage or as 5
-  let dailyVerseLimit = localStorage.getItem('dailyVerseLimit') || 5;
+  let dailyVerseLimit = localStorage.getItem('dailyVerseLimit') || 10;
 
   // Create an array of translation options
   let translationOptions = translations.map(translation => ({

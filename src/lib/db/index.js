@@ -56,6 +56,7 @@ export function isDailyVerseLimitReached() {
   if (localStorage.getItem(day) !== null) {
     const dailyVerseRead = localStorage.getItem(day);
     const dailyVerseLimit = localStorage.getItem("dailyVerseLimit") || 10;
+    console.log(dailyVerseLimit);
 
     if (parseInt(dailyVerseRead) === dailyVerseLimit) {
       return true; // Daily verse limit reached

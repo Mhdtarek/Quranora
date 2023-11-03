@@ -3,6 +3,7 @@
     startReading,
     readNextVerse,
   } from '$lib'; // Import the actual functions from $lib
+  import {isDailyVerseLimitReached} from "$lib/db"
   import { Badge, Group, Card, Button  } from '@svelteuidev/core';
 
   let userId = 'user123'; // Replace with the actual user ID
@@ -40,12 +41,14 @@
     hasanat = result.hasanat;
     message = result.message
     versesReadToday = result.versesReadToday;
+
+    console.log(isDailyVerseLimitReached())
   }
   initReading()
 </script>
 
 <main>
-  {#if versesReadToday < 10}
+  {#if versesReadToday < dailyVerseLimit}
     <div class="group">
       <Group position="apart" spacing="md" class="error">
         <Badge color="yellow" size="lg" radius="xs">
@@ -74,7 +77,7 @@
         <Button style="width: 100%; margin: 0 auto;" on:click={nextVerse}>Next Verse</Button>
     </div>
   {/if}
-  {#if versesReadToday >= 10}
+  {#if versesReadToday >= dailyVerseLimit}
     <div class="" style="text-align: center; margin-top: 20px;">
       <Card>
         You have read enough for today
