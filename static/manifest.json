@@ -1,17 +1,21 @@
 {
-  "background_color": "#e6f4ff",
-  "description": "Small Daily quran reader with Statistics",
+  "background_color": "#ffffff",
+  "description": "ffgfg",
   "dir": "ltr",
   "display": "standalone",
-  "name": "quranora",
-  "orientation": "natural",
-  "scope": "/app",
-  "short_name": "quranora",
-  "start_url": "/app",
-  "theme_color": "#228be6",
+  "name": "quranora.netlify",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "quranora.netlify",
+  "start_url": "/",
+  "theme_color": "#ffffff",
   "categories": ["books", "utilities"],
   "screenshots": [],
   "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512"
+    },
     {
       "src": "favicon.png",
       "sizes": "128x128"
@@ -472,5 +476,7 @@
       "description": "Start your daily Read"
     }
   ],
-  "lang": "en"
+  "edge_side_panel": {
+    "preferred_width": 0
+  }
 }
