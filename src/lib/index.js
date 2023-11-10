@@ -258,8 +258,6 @@ export async function readNextCustomVerse(userId, currentVerse) {
       .then((successMessage) => console.log(successMessage))
       .catch((errorMessage) => console.error(errorMessage));
 
-    localStorage.setItem("currentVerse", nextVerse);
-
     return {
       currentVerse: nextVerse,
       verseText: verseTextData.text_uthmani,
