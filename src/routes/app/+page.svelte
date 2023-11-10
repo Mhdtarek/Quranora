@@ -47,5 +47,22 @@
     </a>
     {/if}
   </Card>
+<div class="customCard">
+    <Card shadow='sm' padding='lg'>
+      <Card.Section first padding='lg'>
+        <h2 style="text-align: center;">Custom Read</h2>
+      </Card.Section>
+      <a href="/app/custom" data-sveltekit-preload-code="viewport">
+        <Button variant='outline' color='blue' fullSize>
+          Start custom read
+        </Button>
+      </a>
+    </Card>
+  </div>
 </div>
-  
+
+<style>
+  .customCard {
+    margin-top: 20px;
+  }
+</style>

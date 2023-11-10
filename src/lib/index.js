@@ -208,3 +208,67 @@ export async function readNextVerse(
     console.error(error);
   }
 }
+
+export async function startCustomReading(userId, startVerse) {
+  try {
+    let currentVerse =
+      startVerse || localStorage.getItem("currentVerse") || "1:1";
+
+    const selectedTranslationID =
+      localStorage.getItem("selectedTranslation") || 131;
+
+    let verseTextData = await fetchVerseText(
+      currentVerse,
+      selectedTranslationID
+    );
+    const hasanat = calculateHasanat(verseTextData.text_uthmani);
+
+    return {
+      message: "Go",
+      currentVerse,
+      verseText: verseTextData.text_uthmani,
+      translationText: verseTextData.translation,
+      hasanat,
+    };
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function readNextCustomVerse(userId, currentVerse) {
+  try {
+    const selectedTranslationID =
+      localStorage.getItem("selectedTranslation") || 131;
+
+    const nextVerse = getNextVerse(currentVerse);
+    let verseTextData = await fetchVerseText(nextVerse, selectedTranslationID);
+
+    addToIndexedDB(
+      "Statistics",
+      {
+        name: nextVerse,
+        currentVerse: nextVerse,
+        verseText: verseTextData.text_uthmani,
+        translationText: verseTextData.translation,
+        hasanat: calculateHasanat(verseTextData.text_uthmani),
+        date: Date(),
+      },
+      "Ayahs"
+    )
+      .then((successMessage) => console.log(successMessage))
+      .catch((errorMessage) => console.error(errorMessage));
+
+    localStorage.setItem("currentVerse", nextVerse);
+
+    return {
+      currentVerse: nextVerse,
+      verseText: verseTextData.text_uthmani,
+      translationText: verseTextData.translation,
+      hasanat: calculateHasanat(verseTextData.text_uthmani),
+      message: "Continue read",
+      date: Date(),
+    };
+  } catch (error) {
+    console.error(error);
+  }
+}
