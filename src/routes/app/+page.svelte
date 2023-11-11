@@ -1,7 +1,20 @@
 <script>
   import { Badge, Button, Card, Group, Image, Text } from '@svelteuidev/core';
-
   import { isDailyVerseLimitReached } from '$lib/db';
+  import {getStatisticsFromIndexedDB} from "$lib/statistics"
+  import WeeklyStatistics from "$lib/statistics/weeklyStatistics.svelte"
+
+  let weeklyStatistics = {}
+  let chart 
+
+  getStatisticsFromIndexedDB("Statistics", "Ayahs", 7)
+  .then((statistics) => {
+    console.log("Statistics for the last 7 days:", statistics);
+    weeklyStatistics = statistics
+  })
+  .catch((error) => {
+    console.error(error);
+  });
 
   const today = new Date();
   const day = today.toISOString().split("T")[0]; // Extract the date in "YYYY-MM-DD" format
@@ -25,7 +38,6 @@
       versesToRead = "Max amount read";
     }
   }
-  
 </script>
 <div style="margin-top: 20px;">
   <h1 style="text-align: center; margin-bottom: 20px;">Quranora</h1>
@@ -59,8 +71,8 @@
       </a>
     </Card>
   </div>
+  <WeeklyStatistics />
 </div>
-
 <style>
   .customCard {
     margin-top: 20px;

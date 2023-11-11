@@ -1,8 +1,4 @@
-export function addToIndexedDB(
-  dbName,
-  objectData,
-  objectStoreName = "MyObjectStore"
-) {
+export function addToIndexedDB(dbName, objectData, objectStoreName) {
   return new Promise((resolve, reject) => {
     if (!window.indexedDB) {
       reject("Your browser doesn't support IndexedDB.");
@@ -48,6 +44,39 @@ export function addToIndexedDB(
   });
 }
 
+export function readFromIndexedDB(dbName, objectStoreName) {
+  return new Promise((resolve, reject) => {
+    if (!window.indexedDB) {
+      reject("Your browser doesn't support IndexedDB.");
+      return;
+    }
+
+    const request = window.indexedDB.open(dbName);
+
+    request.onsuccess = function (event) {
+      const db = event.target.result;
+      const transaction = db.transaction([objectStoreName], "readonly");
+      const objectStore = transaction.objectStore(objectStoreName);
+
+      const getAllRequest = objectStore.getAll();
+
+      getAllRequest.onsuccess = function (event) {
+        db.close();
+        resolve(event.target.result);
+      };
+
+      getAllRequest.onerror = function (event) {
+        db.close();
+        reject("Error reading data: " + event.target.error);
+      };
+    };
+
+    request.onerror = function (event) {
+      reject("Error opening the database: " + event.target.error);
+    };
+  });
+}
+
 export function isDailyVerseLimitReached() {
   const today = new Date();
   const day = today.toISOString().split("T")[0]; // Extract the date in "YYYY-MM-DD" format
@@ -80,10 +109,4 @@ export function updateDailyVerseCount() {
     // Date doesn't exist in local storage, set dailyVerseRead to 1 for the current date
     localStorage.setItem(day, 1);
   }
-}
-export function getCurrentAyahCode() {
-  return localStorage.getItem("currentAyahCode");
-}
-export function saveCurrentAyahCode(ayahCode) {
-  localStorage.setItem("currentAyahCode", ayahCode);
 }
