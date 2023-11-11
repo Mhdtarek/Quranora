@@ -1,5 +1,5 @@
 <script>
-  import { Badge, Button, Card, Group, Image, Text } from '@svelteuidev/core';
+  import { Button, Card, Group ,Badge } from '@svelteuidev/core';
   import { isDailyVerseLimitReached } from '$lib/db';
   import {getStatisticsFromIndexedDB} from "$lib/statistics"
   import WeeklyStatistics from "$lib/statistics/weeklyStatistics.svelte"
@@ -10,7 +10,7 @@
   getStatisticsFromIndexedDB("Statistics", "Ayahs", 7)
   .then((statistics) => {
     console.log("Statistics for the last 7 days:", statistics);
-    weeklyStatistics = statistics
+    weeklyStatistics = statistics.total
   })
   .catch((error) => {
     console.error(error);
@@ -39,42 +39,60 @@
     }
   }
 </script>
-<div style="margin-top: 20px;">
+
+<div style="margin-top: 20px; margin-bottom: 50px">
   <h1 style="text-align: center; margin-bottom: 20px;">Quranora</h1>
   <Card shadow='sm' padding='lg'>
     <Card.Section first padding='lg'>
-      <h2 style="text-align: center;">Daily Read</h2>
+      <h2 style="text-align: center;">Read</h2>
       {#if versesToRead === "Max amount read"}
-      <p style="text-align: center;">Nothing to read for today </p>
+      <p style="text-align: center;">You have read everything you need to but if you would like to read more then you can custom read</p>
       {:else}
       <p style="text-align: center;">You have {versesToRead} verses to read</p>
       {/if}
     </Card.Section>
     
     {#if showButton}
-    <a href="/app/daily" data-sveltekit-preload-code="viewport">
-      <Button variant='light' color='blue' fullSize>
-        Start reading
-      </Button>
-    </a>
-    {/if}
-  </Card>
-<div class="customCard">
-    <Card shadow='sm' padding='lg'>
-      <Card.Section first padding='lg'>
-        <h2 style="text-align: center;">Custom Read</h2>
-      </Card.Section>
-      <a href="/app/custom" data-sveltekit-preload-code="viewport">
-        <Button variant='outline' color='blue' fullSize>
-          Start custom read
+      <a href="/app/daily" data-sveltekit-preload-code="viewport">
+        <Button variant='light' color='blue' fullSize>
+          Daily read
         </Button>
       </a>
+    {/if}
+    <a href="/app/custom" data-sveltekit-preload-code="viewport">
+      <Button variant='outline' color='blue' fullSize>
+        Custom read
+      </Button>
+    </a>  
+  </Card>
+
+  <div class="statisticsCard">
+    <Card> 
+        <h2>Statistics</h2>
+        <h5>For the last 7 days</h5>
+        <Group position="apart" spacing="md" class="error">
+          <Badge color="yellow" size="lg" radius="xs">
+            {weeklyStatistics.hasanat} Hasanat
+          </Badge>
+          <Badge color="yellow" size="lg" radius="xs">
+            {weeklyStatistics.versesRead} Verses Read
+          </Badge>
+        </Group>
+        <a href="/app/statistics" style="margin-top: 5px; text-decoration: none; display: block" data-sveltekit-preload-code="viewport">
+          <Button variant='outline' color='blue' compact>
+            More Statistics
+          </Button>
+        </a> 
+      <div style="margin-bottom: 50px;">
+        <WeeklyStatistics />
+      </div> 
     </Card>
   </div>
-  <WeeklyStatistics />
 </div>
 <style>
-  .customCard {
+  .statisticsCard {
+    margin-bottom: 80px;
     margin-top: 20px;
+    text-align: center;
   }
 </style>

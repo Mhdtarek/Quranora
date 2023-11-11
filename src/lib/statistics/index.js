@@ -7,10 +7,18 @@ export function getStatisticsFromIndexedDB(
   return new Promise((resolve, reject) => {
     readFromIndexedDB(dbName, objectStoreName)
       .then((allData) => {
+        const currentDate = new Date();
+        const cutoffDate = new Date();
+        cutoffDate.setDate(currentDate.getDate() - (days || 0));
+
+        const filteredData = allData.filter(
+          (item) => new Date(item.date) >= cutoffDate
+        );
+
         const dateStatisticsMap = new Map();
 
         // Group the data by date
-        allData.forEach((item) => {
+        filteredData.forEach((item) => {
           const dateKey = new Date(item.date).toDateString(); // Convert to date string
           const existingEntry = dateStatisticsMap.get(dateKey);
 
@@ -31,23 +39,18 @@ export function getStatisticsFromIndexedDB(
           (a, b) => new Date(a.date) - new Date(b.date)
         );
 
-        // Filter by the specified number of days if provided
-        const filteredStatistics = days
-          ? sortedStatistics.slice(-days)
-          : sortedStatistics;
-
         const statistics = {
           total: {
-            versesRead: filteredStatistics.reduce(
+            versesRead: sortedStatistics.reduce(
               (sum, item) => sum + item.versesRead,
               0
             ),
-            hasanat: filteredStatistics.reduce(
+            hasanat: sortedStatistics.reduce(
               (sum, item) => sum + item.hasanat,
               0
             ),
           },
-          dailyDetails: filteredStatistics,
+          dailyDetails: sortedStatistics,
         };
 
         resolve(statistics);
@@ -56,30 +59,4 @@ export function getStatisticsFromIndexedDB(
         reject(error);
       });
   });
-}
-
-export function translateToChartData(statistics) {
-  if (!statistics || !statistics.dailyDetails) {
-    console.error("Invalid statistics data");
-    return null;
-  }
-
-  const data = statistics.dailyDetails.map((item) => {
-    return {
-      label: item.date,
-      value: item.versesRead, // Assuming versesRead is the relevant property
-    };
-  });
-
-  return {
-    chart: {
-      caption: "Verses Read Per Day",
-      subCaption: "In Number of Verses",
-      xAxisName: "Date",
-      yAxisName: "Verses Read",
-      numberSuffix: "",
-      theme: "fusion", // or any other theme you prefer
-    },
-    data: data,
-  };
 }
