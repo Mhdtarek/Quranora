@@ -11,14 +11,17 @@
     "@sveltejs/adapter-auto": "^2.0.0",
     "@sveltejs/adapter-netlify": "^1.0.0-next.88",
     "@sveltejs/kit": "^1.20.4",
-    "svelte": "^4.0.5",
+    "svelte": "^4.2.3",
     "vite": "^4.4.2"
   },
   "type": "module",
   "dependencies": {
-    "@sveltejs/pancake": "^0.0.18",
     "@svelteuidev/composables": "^0.15.3",
     "@svelteuidev/core": "^0.15.3",
-    "dexie": "^3.2.4"
+    "chart.js": "^4.4.0",
+    "chartjs": "^0.3.24",
+    "dexie": "^3.2.4",
+    "svelte-chartjs": "^3.1.2",
+    "svelte-frappe-charts": "^1.10.0"
   }
 }
