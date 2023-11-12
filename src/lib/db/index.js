@@ -1,5 +1,5 @@
-export function addToIndexedDB(dbName, objectData, objectStoreName) {
-  return new Promise((resolve, reject) => {
+export async function addToIndexedDB(dbName, objectData, objectStoreName) {
+  return new Promise(async (resolve, reject) => {
     if (!window.indexedDB) {
       reject("Your browser doesn't support IndexedDB.");
       return;
@@ -19,23 +19,74 @@ export function addToIndexedDB(dbName, objectData, objectStoreName) {
       }
     };
 
-    request.onsuccess = function (event) {
+    request.onsuccess = async function (event) {
       const db = event.target.result;
-      const transaction = db.transaction([objectStoreName], "readwrite");
-      const objectStore = transaction.objectStore(objectStoreName);
 
-      // Add the object data to the object store
-      const addObjectRequest = objectStore.add(objectData);
-
-      addObjectRequest.onsuccess = function (event) {
+      // Check if the object store exists, create it if not
+      if (!db.objectStoreNames.contains(objectStoreName)) {
+        const version = db.version + 1;
         db.close();
-        resolve("Data added successfully with key: " + event.target.result);
-      };
+        const upgradedDB = await new Promise(
+          (resolveUpgrade, rejectUpgrade) => {
+            const upgradeRequest = window.indexedDB.open(dbName, version);
 
-      addObjectRequest.onerror = function (event) {
-        db.close();
-        reject("Error adding data: " + event.target.error);
-      };
+            upgradeRequest.onupgradeneeded = function (event) {
+              const upgradedDB = event.target.result;
+              upgradedDB.createObjectStore(objectStoreName, {
+                keyPath: "id",
+                autoIncrement: true,
+              });
+              resolveUpgrade(upgradedDB);
+            };
+
+            upgradeRequest.onsuccess = function (event) {
+              const upgradedDB = event.target.result;
+              upgradedDB.close();
+              resolveUpgrade(upgradedDB);
+            };
+
+            upgradeRequest.onerror = function (event) {
+              rejectUpgrade(
+                "Error upgrading the database: " + event.target.error
+              );
+            };
+          }
+        );
+
+        const transaction = upgradedDB.transaction(
+          [objectStoreName],
+          "readwrite"
+        );
+        const objectStore = transaction.objectStore(objectStoreName);
+
+        const addObjectRequest = objectStore.add(objectData);
+
+        addObjectRequest.onsuccess = function (event) {
+          upgradedDB.close();
+          resolve("Data added successfully with key: " + event.target.result);
+        };
+
+        addObjectRequest.onerror = function (event) {
+          upgradedDB.close();
+          reject("Error adding data: " + event.target.error);
+        };
+      } else {
+        const transaction = db.transaction([objectStoreName], "readwrite");
+        const objectStore = transaction.objectStore(objectStoreName);
+
+        // Add the object data to the object store
+        const addObjectRequest = objectStore.add(objectData);
+
+        addObjectRequest.onsuccess = function (event) {
+          db.close();
+          resolve("Data added successfully with key: " + event.target.result);
+        };
+
+        addObjectRequest.onerror = function (event) {
+          db.close();
+          reject("Error adding data: " + event.target.error);
+        };
+      }
     };
 
     request.onerror = function (event) {
@@ -44,8 +95,8 @@ export function addToIndexedDB(dbName, objectData, objectStoreName) {
   });
 }
 
-export function readFromIndexedDB(dbName, objectStoreName) {
-  return new Promise((resolve, reject) => {
+export async function readFromIndexedDB(dbName, objectStoreName) {
+  return new Promise(async (resolve, reject) => {
     if (!window.indexedDB) {
       reject("Your browser doesn't support IndexedDB.");
       return;
@@ -53,22 +104,73 @@ export function readFromIndexedDB(dbName, objectStoreName) {
 
     const request = window.indexedDB.open(dbName);
 
-    request.onsuccess = function (event) {
+    request.onsuccess = async function (event) {
       const db = event.target.result;
-      const transaction = db.transaction([objectStoreName], "readonly");
-      const objectStore = transaction.objectStore(objectStoreName);
 
-      const getAllRequest = objectStore.getAll();
-
-      getAllRequest.onsuccess = function (event) {
+      // Check if the object store exists, create it if not
+      if (!db.objectStoreNames.contains(objectStoreName)) {
+        const version = db.version + 1;
         db.close();
-        resolve(event.target.result);
-      };
+        const upgradedDB = await new Promise(
+          (resolveUpgrade, rejectUpgrade) => {
+            const upgradeRequest = window.indexedDB.open(dbName, version);
 
-      getAllRequest.onerror = function (event) {
-        db.close();
-        reject("Error reading data: " + event.target.error);
-      };
+            upgradeRequest.onupgradeneeded = function (event) {
+              const upgradedDB = event.target.result;
+              upgradedDB.createObjectStore(objectStoreName, {
+                keyPath: "id",
+                autoIncrement: true,
+              });
+              resolveUpgrade(upgradedDB);
+            };
+
+            upgradeRequest.onsuccess = function (event) {
+              const upgradedDB = event.target.result;
+              upgradedDB.close();
+              resolveUpgrade(upgradedDB);
+            };
+
+            upgradeRequest.onerror = function (event) {
+              rejectUpgrade(
+                "Error upgrading the database: " + event.target.error
+              );
+            };
+          }
+        );
+
+        const transaction = upgradedDB.transaction(
+          [objectStoreName],
+          "readonly"
+        );
+        const objectStore = transaction.objectStore(objectStoreName);
+
+        const getAllRequest = objectStore.getAll();
+
+        getAllRequest.onsuccess = function (event) {
+          upgradedDB.close();
+          resolve(event.target.result);
+        };
+
+        getAllRequest.onerror = function (event) {
+          upgradedDB.close();
+          reject("Error reading data: " + event.target.error);
+        };
+      } else {
+        const transaction = db.transaction([objectStoreName], "readonly");
+        const objectStore = transaction.objectStore(objectStoreName);
+
+        const getAllRequest = objectStore.getAll();
+
+        getAllRequest.onsuccess = function (event) {
+          db.close();
+          resolve(event.target.result);
+        };
+
+        getAllRequest.onerror = function (event) {
+          db.close();
+          reject("Error reading data: " + event.target.error);
+        };
+      }
     };
 
     request.onerror = function (event) {
