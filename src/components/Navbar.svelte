@@ -7,13 +7,17 @@
 
 </script>
 <Card>
-
   <Group override={{ height: '100%', px: 20 }} position="apart">
     <div>
     </div>
     <div>
       <a href="/app" data-sveltekit-preload-code="eager">
         <Text>Home</Text>
+      </a>
+    </div>
+    <div>
+      <a href="/app/statistics" data-sveltekit-preload-code="eager">
+        <Text>Statistics</Text>
       </a>
     </div>
     <div>

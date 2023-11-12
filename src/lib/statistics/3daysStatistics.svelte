@@ -4,8 +4,6 @@
   import { getStatisticsFromIndexedDB } from "$lib/statistics";
   import { Badge, Group } from '@svelteuidev/core';
 
-  export let showHasanat
-
   let ayahsChartData = {
     labels: [],
     datasets: [
@@ -26,24 +24,24 @@
     ]
   };
 
-  let weeklyStatistics = {
+  let threeDaysStatistics = {
     hasanat: 0,
     versesRead: 0
   };
 
   async function fetchData() {
     try {
-      const result = await getStatisticsFromIndexedDB("Statistics", "Ayahs", 7); // Fetch data for the last 7 days
+      const result = await getStatisticsFromIndexedDB("Statistics", "Ayahs", 3);
 
       if (result && result.dailyDetails) {
         const currentDate = new Date();
-        // Generate labels for the current week
-        const labels = Array.from({ length: 7 }, (_, index) => {
+        // Generate the last 3 days labels
+        const labels = Array.from({ length: 3 }, (_, index) => {
           const date = new Date(currentDate);
-          date.setDate(date.getDate() - (date.getDay() - 1) + index);
+          date.setDate(date.getDate() - index);
           // Format date as needed, for example: 'Mon', 'Tues', etc.
           return date.toLocaleString('en-us', { weekday: 'short' });
-        });
+        }).reverse();
 
         // Map the data to the correct day index for Ayahs chart
         ayahsChartData.labels = labels;
@@ -59,9 +57,9 @@
           return matchingDay ? matchingDay.hasanat : 0;
         });
 
-        // Calculate weekly statistics
-        weeklyStatistics.hasanat = result.dailyDetails.reduce((total, day) => total + day.hasanat, 0);
-        weeklyStatistics.versesRead = result.dailyDetails.reduce((total, day) => total + day.versesRead, 0);
+        // Calculate 3-day statistics
+        threeDaysStatistics.hasanat = result.dailyDetails.reduce((total, day) => total + day.hasanat, 0);
+        threeDaysStatistics.versesRead = result.dailyDetails.reduce((total, day) => total + day.versesRead, 0);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -77,20 +75,20 @@
 
 <Group position="apart" spacing="md" class="error">
   <Badge color="yellow" size="lg" radius="xs">
-    {weeklyStatistics.hasanat} Hasanat
+    {threeDaysStatistics.hasanat} Hasanat
   </Badge>
   <Badge color="yellow" size="lg" radius="xs">
-    {weeklyStatistics.versesRead} Verses Read
+    {threeDaysStatistics.versesRead} Verses Read
   </Badge>
 </Group>
 
-<div> 
-  <h3>Ayahat Read (This Week)</h3>
+<div>
+  <h3>Ayahat Read (Last 3 Days)</h3>
   <Chart data={ayahsChartData} type="line" />
 </div>
-{#if showHasanat === "true"}
+
 <div>
-  <h3>Hasanat (This Week)</h3>
+  <h3>Hasanat (Last 3 Days)</h3>
   <Chart data={hasanatChartData} type="line" />
 </div>
-{/if}
+
