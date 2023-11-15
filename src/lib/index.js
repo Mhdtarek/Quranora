@@ -4,14 +4,7 @@ import {
   updateDailyVerseCount,
   isDailyVerseLimitReached,
 } from "$lib/db";
-
-// Function to remove tashkeel from a word
-export function removeTashkeel(word) {
-  const regex = /[ء-ي]/g;
-  const tokens = word.match(regex);
-  const wordNoTashkeel = tokens ? tokens.join("") : "";
-  return wordNoTashkeel;
-}
+import { removeTashkeel, transliterateArabic } from "$lib/transliteration";
 
 export function calculateHasanat(cleanText) {
   const rewardPerLetter = 10;
@@ -50,7 +43,6 @@ export async function fetchTranslation(verseKey, translationID) {
       throw new Error("Failed to fetch translation text");
     }
     const data = await response.json();
-    console.log(data);
     const translationText = data.translations[0].text;
     return translationText;
   } catch (error) {
@@ -74,8 +66,12 @@ export async function fetchVerseText(verseKey, translationID = 131) {
 
     if (data && data.verses && data.verses.length > 0) {
       const verseText = data.verses[0].text_uthmani || "";
+      const transliteratedText = transliterateArabic(removeTashkeel(verseText));
+
+      console.log(transliteratedText);
       return {
         text_uthmani: verseText,
+        transliteration: transliteratedText,
         translation: translationText,
       };
     } else {
@@ -127,6 +123,7 @@ export async function startReading(
         message: "Go",
         currentVerse,
         verseText: verseTextData.text_uthmani,
+        transliteration: verseTextData.transliteration,
         translationText: verseTextData.translation,
         hasanat,
         dailyVerseLimit,
@@ -180,6 +177,7 @@ export async function readNextVerse(
         name: nextVerse,
         currentVerse: nextVerse,
         verseText: verseTextData.text_uthmani,
+        transliteration: verseTextData.transliteration,
         translationText: verseTextData.translation,
         hasanat: calculateHasanat(verseTextData.text_uthmani),
         dailyVerseLimit,
@@ -197,6 +195,7 @@ export async function readNextVerse(
     return {
       currentVerse: nextVerse,
       verseText: verseTextData.text_uthmani,
+      transliteration: verseTextData.transliteration,
       translationText: verseTextData.translation,
       hasanat: calculateHasanat(verseTextData.text_uthmani),
       dailyVerseLimit,
@@ -227,6 +226,7 @@ export async function startCustomReading(userId, startVerse) {
       message: "Go",
       currentVerse,
       verseText: verseTextData.text_uthmani,
+      transliteration: verseTextData.transliteration,
       translationText: verseTextData.translation,
       hasanat,
     };
@@ -249,6 +249,7 @@ export async function readNextCustomVerse(userId, currentVerse) {
         name: nextVerse,
         currentVerse: nextVerse,
         verseText: verseTextData.text_uthmani,
+        transliteration: verseTextData.transliteration,
         translationText: verseTextData.translation,
         hasanat: calculateHasanat(verseTextData.text_uthmani),
         date: Date(),
@@ -261,6 +262,7 @@ export async function readNextCustomVerse(userId, currentVerse) {
     return {
       currentVerse: nextVerse,
       verseText: verseTextData.text_uthmani,
+      transliteration: verseTextData.transliteration,
       translationText: verseTextData.translation,
       hasanat: calculateHasanat(verseTextData.text_uthmani),
       message: "Continue read",

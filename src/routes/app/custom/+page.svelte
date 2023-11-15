@@ -20,6 +20,7 @@
   let currentVerse = "1:1";
   let verseText;
   let translationText;
+  let transliterationText;
   let hasanat;
   let message;
 
@@ -66,6 +67,8 @@
     currentVerse = readingProgress.currentVerse;
     verseText = readingProgress.verseText;
     translationText = readingProgress.translationText;
+    transliterationText = readingProgress.transliteration;
+
     hasanat = readingProgress.hasanat;
     message = "Go";
   }
@@ -77,6 +80,8 @@
     currentVerse = result.currentVerse;
     verseText = result.verseText;
     translationText = result.translationText;
+    transliterationText = result.transliteration;
+
     hasanat = result.hasanat;
     message = result.message;
   }
@@ -131,6 +136,11 @@
       <div class="Card" dir="auto">
         <Card>
           <p class="translationText">{translationText}</p>
+        </Card>
+      </div>
+      <div class="Card" dir="auto">
+        <Card>
+          <p class="translationText">{transliterationText}</p>
         </Card>
       </div>
     </div>
