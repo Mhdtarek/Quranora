@@ -83,12 +83,12 @@
 </Group>
 
 <div>
-  <h3>Ayahat Read (Last 3 Days)</h3>
+  <h3>Ayahat Read</h3>
   <Chart data={ayahsChartData} type="line" />
 </div>
 
 <div>
-  <h3>Hasanat (Last 3 Days)</h3>
+  <h3>Hasanat</h3>
   <Chart data={hasanatChartData} type="line" />
 </div>
 

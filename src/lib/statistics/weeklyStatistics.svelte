@@ -85,12 +85,12 @@
 </Group>
 
 <div> 
-  <h3>Ayahat Read (This Week)</h3>
+  <h3>Ayahat Read</h3>
   <Chart data={ayahsChartData} type="line" />
 </div>
 {#if showHasanat === "true"}
 <div>
-  <h3>Hasanat (This Week)</h3>
+  <h3>Hasanat</h3>
   <Chart data={hasanatChartData} type="line" />
 </div>
 {/if}
