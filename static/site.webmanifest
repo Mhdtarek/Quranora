@@ -471,8 +471,18 @@
   "shortcuts": [
     {
       "name": "Daily Read",
-      "url": "/app/read",
-      "description": "Start your daily Read"
+      "url": "/app/daily",
+      "description": "Start your daily read."
+    },
+    {
+      "name": "Custom Read",
+      "url": "/app/custom",
+      "description": "Start your custom read."
+    },
+    {
+      "name": "Statistics",
+      "url": "/app/statistics",
+      "description": "See your statistics."
     }
   ],
   "edge_side_panel": {
