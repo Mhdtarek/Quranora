@@ -3,9 +3,10 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "mhdtarek.quranora",
-      "sha256_cert_fingerprints":
-        ["D2:2C:B2:A5:E8:0C:DD:58:71:2E:99:6B:08:85:76:DB:A5:30:70:27:E0:35:8A:36:6F:BD:A3:2D:E7:67:A2:9A"]
+      "package_name": "mhdtarek.soderhamnmoske",
+      "sha256_cert_fingerprints": [
+        "88:41:70:CD:66:44:5E:05:7F:01:A0:0E:F7:26:77:24:46:3B:8D:36:42:CA:F3:45:90:BB:CD:4D:C7:CA:33:10"
+      ]
     }
   }
 ]
